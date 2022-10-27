@@ -26,7 +26,7 @@ db.connect((err) => {
     }
     console.log('Connected to database');
 });
-global.db = db;
+global.db = db;//edit
 
 
 // Set the directory where Express will pick up HTML files
