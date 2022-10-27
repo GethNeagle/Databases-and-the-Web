@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="about">About </a></li>
+      <li><a href="search">Search Books</a></li>
+      <li><a href="addbook">Add A Book</a></li>
+      <li><a href="list">List Books</a></li>
+      <li><a href="bargainbooks">Bargain Books</a></li>
+      <li><a href="register">Register</a></li>
+      <li><a href="listusers">List All Users</a></li>
+      <li><a href="login">Login Page</a></li>
+    </ul>
+    <title>Register for <%=shopName%></title>
+    <link rel="stylesheet"  type="text/css" href="main.css" />
+  <style>
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: #111111;
+  }
+  </style>
+    <title>Add book to <%=shopName%></title>
+    <link rel="stylesheet"  type="text/css" href="main.css" />
+  </head>
+  <body>
+    <h1><%=shopName%>: Add book</h1>
+    <form method="POST" action="/bookadded">
+        <p>Book name: <input id="names" type="text" name="name" value="" /></p>
+        <p>Price: <input id="price" type="text" name="price" value="" /></p>
+        <input type="submit" value="Add Book" />
+      </form>
+  </body>
+</html>
+
