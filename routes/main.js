@@ -31,12 +31,12 @@ module.exports = function(app, shopData) {
         res.render('register.ejs', shopData);                                                                     
     });                                                                                                 
     app.post('/registered', function (req,res) {
-
+        //initialise bcrypt
         const bcrypt = require('bcrypt');
         const saltRounds = 10;
         const plainPassword = req.body.password;
         
-          
+          //hashing the password
         bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) { 
             console.log(hashedPassword);
             let sqlquery = "INSERT INTO users (username, first, last, email, hashedPassword) VALUES (?,?,?,?,?)";
@@ -53,12 +53,6 @@ module.exports = function(app, shopData) {
         })
             // Store hashed password in your database.
            })   
-           
-       
-        
-
-  
-
     });
 
 
@@ -110,7 +104,7 @@ module.exports = function(app, shopData) {
                     res.send("Success, you are logged in");
                 }
                 else {
-                    res.send("Incorrect");
+                    res.send("Your Username or Password are incorrect");
                 }
             });
               
@@ -157,8 +151,8 @@ module.exports = function(app, shopData) {
      });
 
     app.post('/deleted', function(req, res) {
-        let id= req.body.username;
-          let sqlquery = 'DELETE FROM users WHERE username = ?';
+        let id= req.body.username;//query the database for th euser
+          let sqlquery = 'DELETE FROM users WHERE username = ?';///sql to delete the user.
           db.query(sqlquery, id, function (err, data) {
           if (err) throw err;
           console.log(data.affectedRows + " record(s) updated");
