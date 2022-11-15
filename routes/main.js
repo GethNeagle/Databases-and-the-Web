@@ -10,7 +10,7 @@ module.exports = function(app, shopData) {
         res.render('about.ejs', shopData);
     });
     app.get('/search',function(req,res){
-        res.render("search.ejs", shopData);
+        res.render('search.ejs', shopData);
     });
     app.get('/search-result', function (req, res) {
         //searching in the database
@@ -24,7 +24,7 @@ module.exports = function(app, shopData) {
             }
             let newData = Object.assign({}, shopData, {availableBooks:result});
             console.log(newData)
-            res.render("list.ejs", newData)
+            res.render('list.ejs', newData)
          });        
     });
     app.get('/register', function (req,res) {
@@ -32,7 +32,7 @@ module.exports = function(app, shopData) {
     });                                                                                                 
     app.post('/registered', function (req,res) {
         //initialise bcrypt
-        const bcrypt = require('bcrypt');
+        const bcrypt = require('bcryptjs');
         const saltRounds = 10;
         const plainPassword = req.body.password;
         
@@ -66,7 +66,7 @@ module.exports = function(app, shopData) {
             }
             let newData = Object.assign({}, shopData, {availableBooks:result});
             console.log(newData)
-            res.render("list.ejs", newData)
+            res.render('list.ejs', newData)
          });
     });
 
@@ -79,7 +79,7 @@ module.exports = function(app, shopData) {
             }
             let newData = Object.assign({}, shopData, {availableUsers:result});
             console.log(newData)
-            res.render("listusers.ejs", newData)
+            res.render('listusers.ejs', newData)
          });
     });
 
@@ -88,7 +88,7 @@ module.exports = function(app, shopData) {
      });
 
     app.post('/loggedin', (req, res)=> {
-        const bcrypt = require('bcrypt');
+        const bcrypt = require('bcryptjs');
         const username = req.body.username;
         const password = req.body.password;
         db.query('SELECT hashedPassword FROM users WHERE username LIKE "%' +username+ '%"', function (err, content, fields) {
@@ -142,7 +142,7 @@ module.exports = function(app, shopData) {
           }
           let newData = Object.assign({}, shopData, {availableBooks:result});
           console.log(newData)
-          res.render("bargains.ejs", newData)
+          res.render('bargains.ejs', newData)
         });
     });  
     
