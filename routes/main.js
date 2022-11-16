@@ -9,8 +9,14 @@ module.exports = function(app, shopData) {
     app.get('/about',function(req,res){
         res.render('about.ejs', shopData);
     });
+
     app.get('/search',function(req,res){
+
+        if (req.session.loggedin){
         res.render('search.ejs', shopData);
+        }else{
+            res.send('Please log in');
+        }
     });
     app.get('/search-result', function (req, res) {
         //searching in the database
@@ -51,7 +57,7 @@ module.exports = function(app, shopData) {
              res.send(result);
              
         })
-            // Store hashed password in your database.
+            
            })   
     });
 
@@ -70,28 +76,77 @@ module.exports = function(app, shopData) {
          });
     });
 
+
+
+
     app.get('/listusers', function(req, res) {
-        let sqlquery = "SELECT * FROM users"; // query database to get all the books
-        // execute sql query
-        db.query(sqlquery, (err, result) => {
-            if (err) {
-                res.redirect('./'); 
-            }
-            let newData = Object.assign({}, shopData, {availableUsers:result});
-            console.log(newData)
-            res.render('listusers.ejs', newData)
-         });
+        // If the user is loggedin
+        if (req.session.loggedin) {
+            console.log("here now")
+            let sqlquery = "SELECT * FROM users"; // query database to get all the books
+            db.query(sqlquery, (err, result) => {
+                let newData = Object.assign({}, shopData, {availableUsers:result});
+                res.render('listusers.ejs', newData);  
+             });
+             return;
+            } else {
+            // Not logged in
+            res.send('Please login to view this page!');
+        }
+        res.end();
     });
+
+    app.get('/listusers', function(req, res) {
+        // If the user is loggedin
+        if (req.session.loggedin) {
+            console.log("here now") // Output username
+            let sqlquery = "SELECT * FROM users"; // query database to get all the books
+            // execute sql query
+           
+            db.query(sqlquery, (err, result) => {
+                
+  
+                let newData = Object.assign({}, shopData, {availableUsers:result});
+                res.render('listusers.ejs', newData);
+                
+             });
+             
+        } else {
+            // Not logged in
+            res.send('Please login to view this page!');
+        }
+        res.end();
+    });
+
+    app.get('/logout', function (req, res) {
+        res.render('logout.ejs', shopData);
+     });
+
+     app.post('/loggedout', async (req, res) => {
+        if (req.session.loggedin) {
+            delete req.session.loggedin;
+            res.send({result: 'SUCCESS'});
+        } else {
+            res.json({result: 'ERROR', message: 'User is not logged in.'});
+        }
+    });
+
+
 
     app.get('/login', function (req, res) {
         res.render('login.ejs', shopData);
      });
 
+     app.get('/', function(req, res) {
+        // Render login template
+        res.sendFile(path.join(__dirname + '/loggedin'));
+    });
+
     app.post('/loggedin', (req, res)=> {
         const bcrypt = require('bcryptjs');
         const username = req.body.username;
         const password = req.body.password;
-        db.query('SELECT hashedPassword FROM users WHERE username LIKE "%' +username+ '%"', function (err, content, fields) {
+        db.query('SELECT hashedPassword FROM users WHERE username = ?', [username], function (err, content, fields) {
               //Throws error if any errors during excecution.
               if (err) throw err;
               // if there is no error, produces result.
@@ -101,7 +156,11 @@ module.exports = function(app, shopData) {
                     res.send("Password does not match");
                 }
                 else if (result == true) {
-                    res.send("Success, you are logged in");
+                    
+                    req.session.loggedin = true;
+                    console.log(req.session.loggedin);
+				    req.session.username = username;
+                    res.redirect('/');
                 }
                 else {
                     res.send("Your Username or Password are incorrect");
@@ -117,7 +176,13 @@ module.exports = function(app, shopData) {
 
 
     app.get('/addbook', function (req, res) {
+        if (req.session.loggedin){
+
+        
         res.render('addbook.ejs', shopData);
+        }else{
+            res.send("Please log in");
+        }
      });
  
      app.post('/bookadded', function (req,res) {

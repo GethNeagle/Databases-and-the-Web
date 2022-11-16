@@ -4,14 +4,25 @@ var express = require ('express')
 var ejs = require('ejs')
 var bodyParser= require ('body-parser')
 const mysql = require('mysql');
+const session = require('express-session');
+const path = require('path');
 
 // Create the express application object
-const app = express()
+const app = express();
 const port = 8000
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Set up css
 app.use(express.static(__dirname + '/public'));
+
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'static')));
 
 // Define the database connection
 const db = mysql.createConnection ({
@@ -28,6 +39,7 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 global.db = db;//testing comments
+
 
 
 // Set the directory where Express will pick up HTML files
