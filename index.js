@@ -6,11 +6,20 @@ var bodyParser= require ('body-parser')
 const mysql = require('mysql');
 const session = require('express-session');
 const path = require('path');
+const bodyparser = require('body-parser')
+
+
+
+
 
 // Create the express application object
 const app = express();
 const port = 8000
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// Body-parser middleware
+
+app.use(bodyparser.json())
 
 // Set up css
 app.use(express.static(__dirname + '/public'));
