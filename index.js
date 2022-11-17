@@ -8,22 +8,16 @@ const session = require('express-session');
 const path = require('path');
 const bodyparser = require('body-parser')
 
-
-
-
-
 // Create the express application object
 const app = express();
 const port = 8000
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Body-parser middleware
-
 app.use(bodyparser.json())
 
 // Set up css
 app.use(express.static(__dirname + '/public'));
-
 app.use(session({
 	secret: 'secret',
 	resave: true,
@@ -48,8 +42,6 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 global.db = db;//testing comments
-
-
 
 // Set the directory where Express will pick up HTML files
 // __dirname will get the current directory

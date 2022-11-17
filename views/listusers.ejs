@@ -12,7 +12,7 @@
       <a href="login">Login Page</a>
       <a href="deleteuser">Delete a User</a>
       <a href="logout">Log Out</a>
-    <title>Register for <%=shopName%></title>
+    <title>User list for <%=shopName%></title>
     <link rel="stylesheet"  type="text/css" href="main.css" />
 
     <title>Welcome to <%=shopName%></title>
@@ -20,7 +20,7 @@
   </head>
   <body>
     <h1><%=shopName%> Shop</h1>
-    <h2>Here are the books that we sell:</h2>
+    <h2>Here are the users of the website:</h2>
     <ul>
       <% availableUsers.forEach(function(user) { %>
         <li><%= user.username %> </li>
