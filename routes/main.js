@@ -42,7 +42,46 @@ module.exports = function(app, shopData) {
     //gets the register page
     app.get('/register', function (req,res) {
         res.render('register.ejs', shopData);                                                                     
-    });     
+    });
+
+    app.get('/weather', function (req, res) {
+        res.render('weather.ejs', shopData);
+    })
+    //post the weather, depending on the searched location.
+    app.post('/showweather', function (req,res) {
+        const request = require('request');
+        //fixed API key
+        let apiKey = 'db5b89526c1ec97f3bf837c700dd7191'; 
+        //location from the search
+        let city = req.body.location; 
+        let url =
+       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
+        
+        request(url, function (err, response, body) {
+        if(err){
+        console.log('error:', error);
+        } else { 
+        //res.send(body);
+        var weather = JSON.parse(body)
+        
+        if (req.body.location!==undefined && weather.main!==undefined) {
+            var wmsg =  'The weather in ' + weather.name + ' today is ' + weather.weather[0].description +
+            '! <br> You can expect highs of ' + weather.main.temp_max.toFixed(0) +'°C and lows of ' + weather.main.temp_min.toFixed(0) + '°C <br>' +
+            'The wind speed today will be ' + weather.wind.speed + ' mph <br>' +
+            'Humidity is ' + weather.main.humidity + '% and the current visibilty is ' + weather.visibility + ' meters'
+             ;
+ 
+            res.send (wmsg);
+           } 
+           else { 
+            res.send ("No data found");
+           } 
+        } 
+        });                                                                     
+    });
+
+
+
     
     //posts the registered page
     app.post('/registered',[
@@ -95,6 +134,21 @@ module.exports = function(app, shopData) {
             let newData = Object.assign({}, shopData, {availableBooks:result});
             console.log(newData)
             res.render('list.ejs', newData)
+            //res.json({newData})
+        });
+    });
+
+    app.get('/booksapi', function(req, res) {
+        let sqlquery = "SELECT * FROM books"; // query database to get all the books
+        // execute sql query
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                res.redirect('./'); 
+            }
+            let newData = Object.assign({}, shopData, {availableBooks:result});
+            console.log(newData)
+            //res.render('list.ejs', newData)
+            res.json({newData})
         });
     });
 
