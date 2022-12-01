@@ -236,7 +236,7 @@ module.exports = function(app, shopData) {
             // Not logged in
             res.send('Please login to view this page!');
         }
-        res.end();
+        //res.end();
     });
 
     //gets logout page    
