@@ -13,23 +13,19 @@
     <a href="deleteuser">Delete a User</a>
     <a href="logout">Log Out</a>
     <a href="weather">Weather</a>
-    <a href="booksapi">Books API</a>
-    </ul>
-    <title>Books on <%=shopName%></title>
+    <a href="api">Books API</a>
+    <title>Register for <%=shopName%></title>
     <link rel="stylesheet"  type="text/css" href="main.css" />
-  <style>
 
-  </style>
-    <title>Welcome to <%=shopName%></title>
+    <title>Search <%=shopName%></title>
     <link rel="stylesheet"  type="text/css" href="main.css" />
   </head>
   <body>
-    <h1><%=shopName%> Shop</h1>
-    <h2>Here are the books that we sell:</h2>
-    <ul class="nav">
-      <% availableBooks.forEach(function(book) { %>
-        <li class="list"><%= book.name %>, £<%=book.price%> </li>
-      <% }) %>
-    </ul>
-    </body>
+    <h1>Search <%=shopName%></h1>
+    <form action="/booksapi" method="GET">
+      <p>What book do you want?</p>
+      <input id="search-box" type="text" name="keyword" value="Default">
+      <input type="submit" value="Search" >
+    </form>
+  </body>
 </html>

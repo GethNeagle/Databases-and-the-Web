@@ -63,7 +63,7 @@ module.exports = function(app, shopData) {
         } else { 
         //res.send(body);
         var weather = JSON.parse(body)
-        
+        //error catching, if no city found or no weather for the city. 
         if (req.body.location!==undefined && weather.main!==undefined) {
             var wmsg =  'The weather in ' + weather.name + ' today is ' + weather.weather[0].description +
             '! <br> You can expect highs of ' + weather.main.temp_max.toFixed(0) +'°C and lows of ' + weather.main.temp_min.toFixed(0) + '°C <br>' +
@@ -137,40 +137,30 @@ module.exports = function(app, shopData) {
             //res.json({newData})
         });
     });
+    //renders the books API
+    app.get('/api', function (req,res) {
+        res.render('api.ejs', shopData);                                                                     
+    });
 
-    app.get('/booksapi', function(req, res) {
-        let sqlquery = "SELECT * FROM books"; // query database to get all the books
+    //Shows list of books in JSON format
+    app.get('/booksapi', function (req, res) {
+        //searching in the database
+        let sqlquery = "SELECT * FROM books WHERE name LIKE '%" + req.query.keyword + "%'"; // query database to get all the books
         // execute sql query
         db.query(sqlquery, (err, result) => {
             if (err) {
                 res.redirect('./'); 
             }
+            //if no errors
             let newData = Object.assign({}, shopData, {availableBooks:result});
             console.log(newData)
-            //res.render('list.ejs', newData)
             res.json({newData})
-        });
+         });        
     });
 
 
 
-
-    app.get('/listusers', function(req, res) {
-        // If the user is loggedin
-        if (req.session.loggedin) {
-            let sqlquery = "SELECT * FROM users"; // query database to get all the books
-            db.query(sqlquery, (err, result) => {
-                let newData = Object.assign({}, shopData, {availableUsers:result});
-                res.render('listusers.ejs', newData)
-            });
-            return;
-            } else {
-            // Not logged in
-            res.send('Please login to view this page!');
-        }
-        res.end();
-    });
-
+    //Show list of users on website. Needs to be logged in
     app.get('/listusers', function(req, res) {
         // If the user is loggedin
         if (req.session.loggedin) {
@@ -203,15 +193,18 @@ module.exports = function(app, shopData) {
         }
     });
 
+    //Renders login page
     app.get('/login', function (req, res) {
         res.render('login.ejs', shopData);
      });
-
+     
+     //render login page
      app.get('/', function(req, res) {
         // Render login template
         res.sendFile(path.join(__dirname + '/loggedin'));
     });
 
+    //WHen user has enetered details, will check if correct and log in user.
     app.post('/loggedin', (req, res)=> {
         const bcrypt = require('bcryptjs');
         const username = req.body.username;
@@ -267,7 +260,7 @@ module.exports = function(app, shopData) {
              res.send(' This book is added to database, name: '+ req.body.name + ' price '+ req.body.price);
              });
        });    
-   
+   //renders bargain books
     app.get('/bargainbooks', function(req, res) {
         // If the user is loggedin
         if (req.session.loggedin) {
@@ -288,7 +281,7 @@ module.exports = function(app, shopData) {
         }
         res.end();
     });
-    
+    //redners delete user page
      app.get('/deleteuser', function (req, res) {
         if (req.session.loggedin){
             res.render('deleteuser.ejs', shopData);
@@ -296,7 +289,7 @@ module.exports = function(app, shopData) {
             res.send("Please log in");
         }
      });
-
+     //methos to delete a user. 
     app.post('/deleted', function(req, res) {
         let id= req.body.username;//query the database for th euser
           let sqlquery = 'DELETE FROM users WHERE username = ?';///sql to delete the user.
