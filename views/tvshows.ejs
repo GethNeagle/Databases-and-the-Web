@@ -15,22 +15,20 @@
     <a href="weather">Weather</a>
     <a href="api">Books API</a>
     <a href="tvshows">TV Shows</a>
-    </ul>
-    <title>Books on <%=shopName%></title>
-    <link rel="stylesheet"  type="text/css" href="main.css" />
-  <style>
 
-  </style>
-    <title>Welcome to <%=shopName%></title>
+    <h1>Fidn the title of the first episode of any TV Show!</h1>
+
+
+  <title>Welcome To <%=shopName%></title>
+  <link rel="stylesheet"  type="text/css" href="main.css" />
+
+    <title>Search the Destination to show the weather</title>
     <link rel="stylesheet"  type="text/css" href="main.css" />
   </head>
   <body>
-    <h1><%=shopName%> Shop</h1>
-    <h2>Here are the books that we sell:</h2>
-    <ul class="nav">
-      <% availableBooks.forEach(function(book) { %>
-        <li class="list"><%= book.name %>, £<%=book.price%> </li>
-      <% }) %>
-    </ul>
-    </body>
+    <form method="POST" action="/showtvshows">
+      <p>Enter a search term: <input id="location" type="text" name="location" value="" /></p>
+      <input type="submit" value="Search" />
+
+  </body>
 </html>

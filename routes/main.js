@@ -80,6 +80,64 @@ module.exports = function(app, shopData) {
         });                                                                     
     });
 
+    //API fo rtv shows, shows the first episode of a tv show. 
+    app.post('/showtvshows', function (req,res) {
+        const request = require('request');
+        //fixed API key
+        let apiKey = 'db5b89526c1ec97f3bf837c700dd7191'; 
+        //location from the search
+        let tv = req.body.location;
+         
+        let url =
+       `https://api.tvmaze.com/search/shows?q=${tv}`
+        
+        request(url, function (err, response, body) {
+            console.log(url);
+        if(err){
+        console.log('error:', error);
+        } else { 
+        //res.send(body);
+        var tvshow = JSON.parse(body)
+        //error catching, if no city found or no weather for the city. 
+        if (tvshow[0]!==undefined ) {
+            let name = tvshow[0].show.name;
+            id = tvshow[0].show.id;
+            let url =
+            `https://api.tvmaze.com/shows/${id}/episodes`
+             
+             request(url, function (err, response, body) {
+                 console.log(url);
+             if(err){
+             console.log('error:', error);
+             } else { 
+             //res.send(body);
+             var tvshow = JSON.parse(body)
+             
+             //error catching, if no city found or no weather for the city. 
+             if (req.body.location!==[]) {
+
+                var wmsg = 'The first episode of '+ name +' was called ' + tvshow[0].name +
+                '<br> It first aired on ' + tvshow[0].airdate +
+                '<br> Here is a summary of the episode: ' + 
+                '<br> ' + tvshow[0].summary;
+
+                res.send (wmsg);     
+     
+                } 
+                else { 
+                 res.send ("Please enter a real TV show");
+                } 
+             } 
+             });
+
+           } 
+           else { 
+            res.send ("Please enter a real TV show");
+           } 
+        } 
+        });                                                                     
+    });
+
 
 
     
@@ -140,6 +198,10 @@ module.exports = function(app, shopData) {
     //renders the books API
     app.get('/api', function (req,res) {
         res.render('api.ejs', shopData);                                                                     
+    });
+
+    app.get('/tvshows', function (req,res) {
+        res.render('tvshows.ejs', shopData);                                                                     
     });
 
     //Shows list of books in JSON format
